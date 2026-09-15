@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Website</title>
+    <title>Question</title>
 
     <style>
         body {
@@ -14,40 +14,44 @@
             align-items: center;
             background: #111;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: Arial;
         }
 
         .box {
-            width: 90%;
+            width: 85%;
             max-width: 400px;
-            text-align: center;
             background: #222;
             padding: 30px;
             border-radius: 20px;
+            text-align: center;
         }
 
         input {
             width: 90%;
             padding: 14px;
+            border: 0;
             border-radius: 10px;
-            border: none;
+            margin: 10px 0;
             font-size: 16px;
-            margin-bottom: 15px;
         }
 
         button {
             padding: 14px 30px;
-            border: none;
+            border: 0;
             border-radius: 10px;
             background: #ff6b00;
             color: white;
             font-size: 17px;
-            cursor: pointer;
         }
 
-        #message {
+        #openLink {
+            display: none;
             margin-top: 20px;
-            color: #aaa;
+            color: white;
+            background: #e1306c;
+            padding: 14px 25px;
+            border-radius: 10px;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -68,9 +72,21 @@
 
     <br>
 
-    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="checkAnswer()">
+        Submit
+    </button>
 
-    <div id="message"></div>
+    <p id="message"></p>
+
+    <!-- Backup link -->
+    <a
+        id="openLink"
+        href="https://xhaccess.com/search/porn/"
+        target="_blank"
+        rel="noopener"
+    >
+        Open Instagram 📸
+    </a>
 
 </div>
 
@@ -78,23 +94,24 @@
 
 function checkAnswer() {
 
-    let answer = document
+    const answer = document
         .getElementById("answer")
         .value
         .trim()
         .toLowerCase();
 
-    // Instagram link
-    const LINK = "xhaccess.com
-https://xhaccess.com
-xHamster - Free Porn Videos & XXX Movies/";
-
     if (answer === "true" || answer === "yes") {
 
         document.getElementById("message").textContent =
-            "Correct! Opening Instagram... 🚀";
+            "Correct! 🚀";
 
-        window.open(LINK, "_blank");
+        // Show a clickable Instagram button
+        document.getElementById("openLink").style.display =
+            "inline-block";
+
+        // Try opening automatically
+        window.location.href =
+            "https://www.instagram.com/";
 
     } else {
 
