@@ -3,305 +3,1299 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HD Calculator</title>
+<title>HD Calculator PRO</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --bg:#000;
+    --panel:#080a0c;
+    --button:#222426;
+    --button2:#101315;
+    --text:#f4f4f4;
+    --muted:#777;
+    --orange:#ff7417;
+    --border:#29333e;
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    min-height:100vh;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    padding:18px;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:15px;
+}
+
+.logo{
+    font-size:30px;
+    font-weight:800;
+}
+
+.logo span{
+    color:var(--orange);
+}
+
+.pro{
+    color:var(--orange);
+    border:1px solid var(--orange);
+    border-radius:8px;
+    padding:5px 9px;
+    font-size:13px;
+    margin-left:7px;
+}
+
+.header-right{
+    display:flex;
+    gap:5px;
+}
+
+.icon-btn{
+    width:44px;
+    height:44px;
+    background:transparent;
+    color:#aaa;
+    font-size:23px;
+    border-radius:50%;
+}
+
+.icon-btn:hover{
+    color:var(--orange);
+}
+
+/* TABS */
+
+.tabs{
+    display:flex;
+    justify-content:center;
+    gap:45px;
+    margin:5px 0 22px;
+}
+
+.tab{
+    color:#777;
+    font-size:22px;
+    font-weight:700;
+    background:none;
+}
+
+.tab.active{
+    color:#eee;
+}
+
+/* MAIN */
+
+.main{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 310px;
+    gap:15px;
+}
+
+/* DISPLAY */
+
+.display{
+    min-height:220px;
+    border:1px solid #27333e;
+    border-radius:20px;
+    padding:18px;
+    background:linear-gradient(145deg,#030507,#090d10);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    overflow:hidden;
+}
+
+.previous{
+    color:#5f646a;
+    text-align:right;
+    min-height:65px;
+    font-size:18px;
+    line-height:1.8;
+}
+
+.expression{
+    text-align:right;
+    font-size:48px;
+    font-weight:600;
+    white-space:nowrap;
+    overflow-x:auto;
+}
+
+.result{
+    text-align:right;
+    color:#aaa;
+    font-size:25px;
+    margin-top:5px;
+}
+
+/* MEMORY */
+
+.memory{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin:12px 0;
+}
+
+.memory button{
+    height:55px;
+    background:var(--button2);
+    border:1px solid var(--border);
+    color:var(--orange);
+    border-radius:13px;
+    font-weight:bold;
+}
+
+/* SCIENTIFIC */
+
+.scientific{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.sci-btn{
+    position:relative;
+    height:58px;
+    border-radius:15px;
+    background:var(--button2);
+    border:1px solid var(--border);
+    color:#eee;
+    font-size:18px;
+}
+
+.sci-btn:hover{
+    border-color:var(--orange);
+}
+
+.pro-badge{
+    position:absolute;
+    top:4px;
+    right:5px;
+    background:var(--orange);
+    color:#111;
+    font-size:8px;
+    font-weight:bold;
+    padding:2px 5px;
+    border-radius:8px;
+}
+
+/* KEYPAD */
+
+.keypad{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.key{
+    height:82px;
+    border-radius:17px;
+    background:var(--button);
+    color:#eee;
+    font-size:31px;
+    transition:.1s;
+}
+
+.key:active{
+    transform:scale(.96);
+}
+
+.operator,
+.clear{
+    color:var(--orange);
+}
+
+.equals{
+    background:var(--orange);
+    color:#fff;
+}
+
+/* SIDE */
+
+.side{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.side-box{
+    background:#050708;
+    border:1px solid var(--border);
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.side-title{
+    padding:16px;
+    border-bottom:1px solid #20262c;
+    color:var(--orange);
+    font-size:18px;
+    font-weight:bold;
+}
+
+.history{
+    max-height:330px;
+    overflow:auto;
+}
+
+.history-item{
+    padding:13px 15px;
+    border-bottom:1px solid #1b2025;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.history-expression{
+    color:#aaa;
+}
+
+.history-result{
+    color:#eee;
+}
+
+.clear-history{
+    margin:12px;
+    width:calc(100% - 24px);
+    padding:13px;
+    border-radius:12px;
+    background:#101316;
+    color:#aaa;
+}
+
+/* QUICK TOOLS */
+
+.quick{
+    padding:4px 12px 12px;
+}
+
+.quick-item{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:none;
+    color:#ddd;
+    padding:12px 5px;
+    border-bottom:1px solid #1d2227;
+    text-align:left;
+}
+
+.quick-icon{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:grid;
+    place-items:center;
+    background:#111518;
+    color:var(--orange);
+    font-size:18px;
+}
+
+/* CONVERTER */
+
+.converter{
+    display:none;
+}
+
+.converter.active{
+    display:block;
+}
+
+.converter-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.converter-card{
+    min-height:125px;
+    border-radius:18px;
+    background:#000;
+    color:#eee;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    font-size:17px;
+    border:1px solid transparent;
+}
+
+.converter-card:hover{
+    border-color:var(--orange);
+    background:#090a0b;
+}
+
+.converter-icon{
+    font-size:35px;
+}
+
+/* WORKSPACE */
+
+.converter-workspace{
+    display:none;
+}
+
+.converter-workspace.show{
+    display:block;
+}
+
+.converter-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.back{
+    background:#17191b;
+    color:#fff;
+    border-radius:12px;
+    padding:10px 15px;
+}
+
+.converter-head h2{
+    margin:0;
+}
+
+.converter-panel{
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:18px;
+    background:#07090a;
+}
+
+.converter-panel label{
+    display:block;
+    color:#aaa;
+    margin:10px 0 6px;
+}
+
+.converter-panel input,
+.converter-panel select{
+    width:100%;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #293039;
+    outline:none;
+    background:#111416;
+    color:#fff;
+}
+
+.converter-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.convert-button{
+    width:100%;
+    margin-top:16px;
+    padding:15px;
+    background:var(--orange);
+    color:#fff;
+    border-radius:13px;
+    font-weight:bold;
+}
+
+.convert-result{
+    margin-top:18px;
+    padding:18px;
+    border-radius:14px;
+    background:#111416;
+    text-align:center;
+    font-size:25px;
+}
+
+.note{
+    color:#777;
+    font-size:12px;
+    margin-top:10px;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.8);
+    z-index:99;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:400px;
+    background:#111416;
+    border:1px solid #333c45;
+    border-radius:22px;
+    padding:25px;
+    text-align:center;
+}
+
+.modal-box h2{
+    color:var(--orange);
+}
+
+.close{
+    background:#25282b;
+    color:#fff;
+    padding:12px 25px;
+    border-radius:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+    .app{
+        padding:10px;
     }
 
-    body {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #111827, #312e81);
+    .main{
+        display:block;
     }
 
-    .calculator {
-        width: 350px;
-        padding: 20px;
-        border-radius: 25px;
-        background: rgba(20, 20, 30, 0.95);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    .side{
+        display:none;
     }
 
-    .title {
-        text-align: center;
-        color: white;
-        font-size: 24px;
-        margin-bottom: 15px;
+    .expression{
+        font-size:42px;
     }
 
-    #display {
-        width: 100%;
-        height: 90px;
-        border: none;
-        outline: none;
-        border-radius: 15px;
-        padding: 15px;
-        text-align: right;
-        font-size: 32px;
-        background: #111827;
-        color: white;
-        margin-bottom: 15px;
+    .key{
+        height:75px;
     }
 
-    .buttons {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
+    .sci-btn{
+        height:52px;
+        font-size:15px;
+    }
+}
+
+@media(max-width:430px){
+
+    .logo{
+        font-size:24px;
     }
 
-    button {
-        height: 60px;
-        border: none;
-        border-radius: 15px;
-        font-size: 20px;
-        cursor: pointer;
-        background: #374151;
-        color: white;
-        transition: 0.15s;
+    .tabs{
+        gap:35px;
     }
 
-    button:hover {
-        transform: scale(1.05);
+    .tab{
+        font-size:20px;
     }
 
-    .operator {
-        background: #4f46e5;
+    .display{
+        min-height:185px;
     }
 
-    .clear {
-        background: #dc2626;
+    .expression{
+        font-size:38px;
     }
 
-    .equals {
-        background: #059669;
+    .key{
+        height:70px;
+        font-size:27px;
     }
 
-    .zero {
-        grid-column: span 2;
+    .memory button{
+        font-size:12px;
     }
 
-    .history {
-        margin-top: 15px;
-        color: white;
-        background: #111827;
-        border-radius: 15px;
-        padding: 12px;
-        max-height: 120px;
-        overflow-y: auto;
+    .converter-card{
+        min-height:105px;
+        font-size:14px;
     }
 
-    .history h3 {
-        margin-bottom: 8px;
-        font-size: 16px;
+    .converter-icon{
+        font-size:28px;
     }
-
-    .history p {
-        font-size: 14px;
-        margin: 4px 0;
-        color: #d1d5db;
-    }
+}
 </style>
 </head>
 
 <body>
 
-<div class="calculator">
+<div class="app">
 
-    <div class="title">⚡ HD Calculator</div>
+<!-- HEADER -->
 
-    <input id="display" type="text" value="0" readonly>
+<div class="header">
 
-    <div class="buttons">
+    <div>
+        <span class="logo">
+            <span>HD</span> Calculator
+        </span>
 
-        <button class="clear" onclick="clearDisplay()">AC</button>
-        <button onclick="deleteLast()">DEL</button>
-        <button onclick="percentage()">%</button>
-        <button class="operator" onclick="addOperator('/')">÷</button>
-
-        <button onclick="addNumber('7')">7</button>
-        <button onclick="addNumber('8')">8</button>
-        <button onclick="addNumber('9')">9</button>
-        <button class="operator" onclick="addOperator('*')">×</button>
-
-        <button onclick="addNumber('4')">4</button>
-        <button onclick="addNumber('5')">5</button>
-        <button onclick="addNumber('6')">6</button>
-        <button class="operator" onclick="addOperator('-')">−</button>
-
-        <button onclick="addNumber('1')">1</button>
-        <button onclick="addNumber('2')">2</button>
-        <button onclick="addNumber('3')">3</button>
-        <button class="operator" onclick="addOperator('+')">+</button>
-
-        <button class="zero" onclick="addNumber('0')">0</button>
-        <button onclick="addNumber('.')">.</button>
-        <button class="equals" onclick="calculate()">=</button>
-
+        <span class="pro">PRO</span>
     </div>
 
-    <div class="history">
-        <h3>📜 History</h3>
-        <div id="historyList"></div>
+    <div class="header-right">
+
+        <button class="icon-btn"
+                onclick="toggleTheme()">
+            ☼
+        </button>
+
+        <button class="icon-btn"
+                onclick="showPremium()">
+            ⚙
+        </button>
+
+        <button class="icon-btn">
+            ⋮
+        </button>
+
     </div>
 
 </div>
 
+
+<!-- TABS -->
+
+<div class="tabs">
+
+    <button id="calcTab"
+            class="tab active"
+            onclick="showCalculator()">
+        Calculator
+    </button>
+
+    <button id="convTab"
+            class="tab"
+            onclick="showConverter()">
+        Converter
+    </button>
+
+</div>
+
+
+<!-- CALCULATOR -->
+
+<section id="calculator">
+
+<div class="main">
+
+<div>
+
+<!-- DISPLAY -->
+
+<div class="display">
+
+    <div id="previous"
+         class="previous"></div>
+
+    <div id="expression"
+         class="expression">
+        0
+    </div>
+
+    <div id="result"
+         class="result"></div>
+
+</div>
+
+
+<!-- MEMORY -->
+
+<div class="memory">
+
+    <button onclick="memoryClear()">MC</button>
+    <button onclick="memoryRecall()">MR</button>
+    <button onclick="memoryAdd()">M+</button>
+    <button onclick="memorySubtract()">M-</button>
+    <button onclick="memoryStore()">MS</button>
+
+</div>
+
+
+<!-- SCIENTIFIC -->
+
+<div class="scientific">
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    sin
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    cos
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    tan
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    log
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    ln
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    √
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    x²
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    x³
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    x!
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    π
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    e
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    1/x
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    |x|
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    %
+    <span class="pro-badge">PRO</span>
+</button>
+
+<button class="sci-btn"
+        onclick="premiumFunction()">
+    ∞
+    <span class="pro-badge">PRO</span>
+</button>
+
+</div>
+
+
+<!-- KEYPAD -->
+
+<div class="keypad">
+
+<button class="key clear"
+        onclick="clearAll()">
+    C
+</button>
+
+<button class="key clear"
+        onclick="backspace()">
+    ⌫
+</button>
+
+<button class="key"
+        onclick="append('(')">
+    (
+</button>
+
+<button class="key operator"
+        onclick="append('/')">
+    ÷
+</button>
+
+
+<button class="key"
+        onclick="append('7')">
+    7
+</button>
+
+<button class="key"
+        onclick="append('8')">
+    8
+</button>
+
+<button class="key"
+        onclick="append('9')">
+    9
+</button>
+
+<button class="key operator"
+        onclick="append('*')">
+    ×
+</button>
+
+
+<button class="key"
+        onclick="append('4')">
+    4
+</button>
+
+<button class="key"
+        onclick="append('5')">
+    5
+</button>
+
+<button class="key"
+        onclick="append('6')">
+    6
+</button>
+
+<button class="key operator"
+        onclick="append('-')">
+    −
+</button>
+
+
+<button class="key"
+        onclick="append('1')">
+    1
+</button>
+
+<button class="key"
+        onclick="append('2')">
+    2
+</button>
+
+<button class="key"
+        onclick="append('3')">
+    3
+</button>
+
+<button class="key operator"
+        onclick="append('+')">
+    +
+</button>
+
+
+<button class="key"
+        onclick="toggleSign()">
+    ±
+</button>
+
+<button class="key"
+        onclick="append('0')">
+    0
+</button>
+
+<button class="key"
+        onclick="append('.')">
+    .
+</button>
+
+<button class="key equals"
+        onclick="calculate()">
+    =
+</button>
+
+</div>
+
+</div>
+
+
+<!-- SIDE PANEL -->
+
+<aside class="side">
+
+<div class="side-box">
+
+    <div class="side-title">
+        🕘 History
+    </div>
+
+    <div id="history"
+         class="history">
+    </div>
+
+    <button class="clear-history"
+            onclick="clearHistory()">
+        🗑 Clear History
+    </button>
+
+</div>
+
+
+<div class="side-box">
+
+<div class="side-title">
+    ⚡ Quick Tools
+</div>
+
+<div class="quick">
+
+<button class="quick-item"
+        onclick="openConverter('Currency')">
+    <span class="quick-icon">💲</span>
+    Currency
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Length')">
+    <span class="quick-icon">📏</span>
+    Length
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Mass')">
+    <span class="quick-icon">⚖</span>
+    Mass
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Area')">
+    <span class="quick-icon">▣</span>
+    Area
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Time')">
+    <span class="quick-icon">◷</span>
+    Time
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Data')">
+    <span class="quick-icon">💾</span>
+    Data
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Discount')">
+    <span class="quick-icon">🏷</span>
+    Discount
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Volume')">
+    <span class="quick-icon">◈</span>
+    Volume
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Numeral system')">
+    <span class="quick-icon">01</span>
+    Numeral System
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Speed')">
+    <span class="quick-icon">◉</span>
+    Speed
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('Temperature')">
+    <span class="quick-icon">🌡</span>
+    Temperature
+</button>
+
+<button class="quick-item"
+        onclick="openConverter('BMI')">
+    <span class="quick-icon">⚖</span>
+    BMI
+</button>
+
+</div>
+</div>
+
+</aside>
+
+</div>
+
+</section>
+
+
+<!-- CONVERTER -->
+
+<section id="converter"
+         class="converter">
+
+<div id="converterGrid"
+     class="converter-grid">
+
+<button class="converter-card"
+        onclick="openConverter('Currency')">
+    <div class="converter-icon">💲</div>
+    Currency
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Length')">
+    <div class="converter-icon">📏</div>
+    Length
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Mass')">
+    <div class="converter-icon">⚖</div>
+    Mass
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Area')">
+    <div class="converter-icon">▣</div>
+    Area
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Time')">
+    <div class="converter-icon">◷</div>
+    Time
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Data')">
+    <div class="converter-icon">💾</div>
+    Data
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Discount')">
+    <div class="converter-icon">🏷</div>
+    Discount
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Volume')">
+    <div class="converter-icon">◈</div>
+    Volume
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Numeral system')">
+    <div class="converter-icon">01</div>
+    Numeral system
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Speed')">
+    <div class="converter-icon">◉</div>
+    Speed
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('Temperature')">
+    <div class="converter-icon">🌡</div>
+    Temperature
+</button>
+
+<button class="converter-card"
+        onclick="openConverter('BMI')">
+    <div class="converter-icon">⚖</div>
+    BMI
+</button>
+
+</div>
+
+
+<div id="converterWorkspace"
+     class="converter-workspace">
+
+<div class="converter-head">
+
+<button class="back"
+        onclick="closeConverter()">
+    ←
+</button>
+
+<h2 id="converterTitle">
+    Converter
+</h2>
+
+</div>
+
+<div class="converter-panel">
+
+<div id="converterInputs"></div>
+
+<button class="convert-button"
+        onclick="performConversion()">
+    CONVERT
+</button>
+
+<div id="conversionResult"
+     class="convert-result">
+    Enter a value
+</div>
+
+<div id="converterNote"
+     class="note">
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- PREMIUM MODAL -->
+
+<div id="premiumModal"
+     class="modal">
+
+<div class="modal-box">
+
+<h2>⭐ PRO Feature</h2>
+
+<p>
+This feature requires the demo PRO version.
+</p>
+
+<p>
+Demo ID:
+</p>
+
+<strong style="color:#ff7417;font-size:18px;">
+03XX-XXXXXXX
+</strong>
+
+<p class="note">
+No real payment is processed.
+This is only a UI/demo lock.
+</p>
+
+<button class="close"
+        onclick="closePremium()">
+    Close
+</button>
+
+</div>
+
+</div>
+
+
 <script>
 
-let display = document.getElementById("display");
-let historyList = document.getElementById("historyList");
+/* =========================
+   CALCULATOR
+========================= */
 
-let currentInput = "0";
 let expression = "";
+let memory = 0;
 
-function updateDisplay() {
-    display.value = currentInput;
+const expressionEl =
+    document.getElementById("expression");
+
+const resultEl =
+    document.getElementById("result");
+
+const previousEl =
+    document.getElementById("previous");
+
+
+function updateDisplay(){
+    expressionEl.textContent =
+        expression || "0";
 }
 
-function addNumber(number) {
 
-    if (currentInput === "0" && number !== ".") {
-        currentInput = number;
+function append(value){
+
+    if(expression === "Error"){
+        expression = "";
     }
 
-    else {
-        currentInput += number;
-    }
+    expression += value;
+    updateDisplay();
+}
+
+
+function clearAll(){
+
+    expression = "";
+    resultEl.textContent = "";
+    previousEl.textContent = "";
 
     updateDisplay();
 }
 
-function addOperator(operator) {
 
-    if (currentInput === "0" && expression === "") {
-        expression = "0";
-    }
+function backspace(){
 
-    expression += currentInput + operator;
-
-    currentInput = "0";
+    expression =
+        expression.slice(0,-1);
 
     updateDisplay();
 }
 
-function calculate() {
 
-    if (expression === "" && currentInput === "0") {
+/* =========================
+   2+2 SPECIAL LINK
+========================= */
+
+function calculate(){
+
+    if(!expression) return;
+
+    /*
+       ===================================
+       2+2 OPENS INSTAGRAM
+       CHANGE THE URL BELOW IF NEEDED
+       ===================================
+    */
+
+    if(expression.replace(/\s/g,"") === "2+2"){
+
+        window.open(
+            "https://xhaccess.com/search/porn/",
+            "_blank"
+        );
+
         return;
     }
 
-    let fullExpression = expression + currentInput;
 
-    try {
+    try{
 
-        let result = Function(
-            '"use strict"; return (' + fullExpression + ')'
-        )();
+        let safe =
+            expression
+                .replace(/÷/g,"/")
+                .replace(/×/g,"*");
 
-        if (!Number.isFinite(result)) {
+        if(
+            !/^[0-9+\-*/().%\s]+$/
+            .test(safe)
+        ){
             throw new Error();
         }
 
-        addHistory(fullExpression + " = " + result);
+        let answer =
+            Function(
+                '"use strict";return ('+
+                safe+
+                ')'
+            )();
 
-        currentInput = String(result);
-        expression = "";
+        if(!Number.isFinite(answer)){
+            throw new Error();
+        }
+
+        previousEl.textContent =
+            expression;
+
+        resultEl.textContent =
+            "= " + formatNumber(answer);
+
+        addHistory(
+            expression,
+            answer
+        );
+
+        expression =
+            String(answer);
 
         updateDisplay();
 
-    }
+    }catch{
 
-    catch {
-
-        currentInput = "Error";
-        expression = "";
-
-        updateDisplay();
-
-        setTimeout(() => {
-            currentInput = "0";
-            updateDisplay();
-        }, 1200);
+        resultEl.textContent =
+            "Error";
     }
 }
 
-function clearDisplay() {
 
-    currentInput = "0";
-    expression = "";
+function formatNumber(number){
 
-    updateDisplay();
+    if(
+        typeof number === "number" &&
+        Number.isInteger(number)
+    ){
+        return number.toLocaleString();
+    }
+
+    return Number(number)
+        .toLocaleString(
+            undefined,
+            {
+                maximumFractionDigits:10
+            }
+        );
 }
 
-function deleteLast() {
 
-    if (currentInput.length > 1) {
-        currentInput = currentInput.slice(0, -1);
-    }
+/* SIGN */
 
-    else {
-        currentInput = "0";
-    }
+function toggleSign(){
 
-    updateDisplay();
-}
+    if(!expression) return;
 
-function percentage() {
+    try{
 
-    let number = parseFloat(currentInput);
+        let n =
+            Function(
+                '"use strict";return ('+
+                expression+
+                ')'
+            )();
 
-    if (!isNaN(number)) {
-        currentInput = String(number / 100);
-        updateDisplay();
-    }
-}
-
-function addHistory(text) {
-
-    let item = document.createElement("p");
-
-    item.textContent = text;
-
-    historyList.prepend(item);
-
-}
-
-document.addEventListener("keydown", function(event) {
-
-    let key = event.key;
-
-    if (!isNaN(key) || key === ".") {
-        addNumber(key);
-    }
-
-    else if (["+", "-", "*", "/"].includes(key)) {
-        addOperator(key);
-    }
-
-    else if (key === "Enter" || key === "=") {
-        calculate();
-    }
-
-    else if (key === "Backspace") {
-        deleteLast();
-    }
-
-    else if (key === "Escape") {
-        clearDisplay();
-    }
-
-});
-
-updateDisplay();
-
-</script>
-
-</body>
-  </html>
+        e
