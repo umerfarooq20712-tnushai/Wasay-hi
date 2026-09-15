@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HD Calculator</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #111827, #312e81);
+    }
+
+    .calculator {
+        width: 350px;
+        padding: 20px;
+        border-radius: 25px;
+        background: rgba(20, 20, 30, 0.95);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .title {
+        text-align: center;
+        color: white;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    #display {
+        width: 100%;
+        height: 90px;
+        border: none;
+        outline: none;
+        border-radius: 15px;
+        padding: 15px;
+        text-align: right;
+        font-size: 32px;
+        background: #111827;
+        color: white;
+        margin-bottom: 15px;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    button {
+        height: 60px;
+        border: none;
+        border-radius: 15px;
+        font-size: 20px;
+        cursor: pointer;
+        background: #374151;
+        color: white;
+        transition: 0.15s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    .operator {
+        background: #4f46e5;
+    }
+
+    .clear {
+        background: #dc2626;
+    }
+
+    .equals {
+        background: #059669;
+    }
+
+    .zero {
+        grid-column: span 2;
+    }
+
+    .history {
+        margin-top: 15px;
+        color: white;
+        background: #111827;
+        border-radius: 15px;
+        padding: 12px;
+        max-height: 120px;
+        overflow-y: auto;
+    }
+
+    .history h3 {
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+
+    .history p {
+        font-size: 14px;
+        margin: 4px 0;
+        color: #d1d5db;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+    <div class="title">⚡ HD Calculator</div>
+
+    <input id="display" type="text" value="0" readonly>
+
+    <div class="buttons">
+
+        <button class="clear" onclick="clearDisplay()">AC</button>
+        <button onclick="deleteLast()">DEL</button>
+        <button onclick="percentage()">%</button>
+        <button class="operator" onclick="addOperator('/')">÷</button>
+
+        <button onclick="addNumber('7')">7</button>
+        <button onclick="addNumber('8')">8</button>
+        <button onclick="addNumber('9')">9</button>
+        <button class="operator" onclick="addOperator('*')">×</button>
+
+        <button onclick="addNumber('4')">4</button>
+        <button onclick="addNumber('5')">5</button>
+        <button onclick="addNumber('6')">6</button>
+        <button class="operator" onclick="addOperator('-')">−</button>
+
+        <button onclick="addNumber('1')">1</button>
+        <button onclick="addNumber('2')">2</button>
+        <button onclick="addNumber('3')">3</button>
+        <button class="operator" onclick="addOperator('+')">+</button>
+
+        <button class="zero" onclick="addNumber('0')">0</button>
+        <button onclick="addNumber('.')">.</button>
+        <button class="equals" onclick="calculate()">=</button>
+
+    </div>
+
+    <div class="history">
+        <h3>📜 History</h3>
+        <div id="historyList"></div>
+    </div>
+
+</div>
+
+<script>
+
+let display = document.getElementById("display");
+let historyList = document.getElementById("historyList");
+
+let currentInput = "0";
+let expression = "";
+
+function updateDisplay() {
+    display.value = currentInput;
+}
+
+function addNumber(number) {
+
+    if (currentInput === "0" && number !== ".") {
+        currentInput = number;
+    }
+
+    else {
+        currentInput += number;
+    }
+
+    updateDisplay();
+}
+
+function addOperator(operator) {
+
+    if (currentInput === "0" && expression === "") {
+        expression = "0";
+    }
+
+    expression += currentInput + operator;
+
+    currentInput = "0";
+
+    updateDisplay();
+}
+
+function calculate() {
+
+    if (expression === "" && currentInput === "0") {
+        return;
+    }
+
+    let fullExpression = expression + currentInput;
+
+    try {
+
+        let result = Function(
+            '"use strict"; return (' + fullExpression + ')'
+        )();
+
+        if (!Number.isFinite(result)) {
+            throw new Error();
+        }
+
+        addHistory(fullExpression + " = " + result);
+
+        currentInput = String(result);
+        expression = "";
+
+        updateDisplay();
+
+    }
+
+    catch {
+
+        currentInput = "Error";
+        expression = "";
+
+        updateDisplay();
+
+        setTimeout(() => {
+            currentInput = "0";
+            updateDisplay();
+        }, 1200);
+    }
+}
+
+function clearDisplay() {
+
+    currentInput = "0";
+    expression = "";
+
+    updateDisplay();
+}
+
+function deleteLast() {
+
+    if (currentInput.length > 1) {
+        currentInput = currentInput.slice(0, -1);
+    }
+
+    else {
+        currentInput = "0";
+    }
+
+    updateDisplay();
+}
+
+function percentage() {
+
+    let number = parseFloat(currentInput);
+
+    if (!isNaN(number)) {
+        currentInput = String(number / 100);
+        updateDisplay();
+    }
+}
+
+function addHistory(text) {
+
+    let item = document.createElement("p");
+
+    item.textContent = text;
+
+    historyList.prepend(item);
+
+}
+
+document.addEventListener("keydown", function(event) {
+
+    let key = event.key;
+
+    if (!isNaN(key) || key === ".") {
+        addNumber(key);
+    }
+
+    else if (["+", "-", "*", "/"].includes(key)) {
+        addOperator(key);
+    }
+
+    else if (key === "Enter" || key === "=") {
+        calculate();
+    }
+
+    else if (key === "Backspace") {
+        deleteLast();
+    }
+
+    else if (key === "Escape") {
+        clearDisplay();
+    }
+
+});
+
+updateDisplay();
+
+</script>
+
+</body>
+  </html>
