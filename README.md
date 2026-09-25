@@ -1,2 +1,0 @@
-# Wasay-hi
-Hghgg
